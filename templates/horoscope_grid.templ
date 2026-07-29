@@ -1,0 +1,56 @@
+package templates
+
+import "tuvi/models"
+
+type HoroscopeData struct {
+	Palaces []models.Place
+	Center  CenterInfo
+	Loading bool
+}
+
+func getPlace(places []models.Place, idx int) string {
+	if idx < len(places) {
+		return places[idx].PlaceName
+	}
+	return ""
+}
+
+templ HoroscopeGrid(data HoroscopeData) {
+	<div id="horoscope"
+	     hx-post="/api/stars"
+	     hx-trigger="submit from:#horoscope-form"
+	     hx-target="#horoscope"
+	     hx-swap="innerHTML"
+	     class="w-full overflow-x-auto">
+		{ if data.Loading {
+			HoroscopeSkeleton()
+		} else {
+			gridContent(data.Palaces, data.Center)
+		} }
+	</div>
+}
+
+templ gridContent(places []models.Place, center CenterInfo) {
+	<div class="chart-grid grid grid-cols-4 gap-[1px] bg-slate-300 border border-slate-300 rounded-lg overflow-hidden w-fit min-w-[400px] lg:min-w-0">
+		<!-- Row 1 -->
+		{ Palace(Palace{Name: getPlace(places, 0)}) }
+		{ Palace(Palace{Name: getPlace(places, 1)}) }
+		{ Palace(Palace{Name: getPlace(places, 2)}) }
+		{ Palace(Palace{Name: getPlace(places, 3)}) }
+
+		<!-- Row 2 -->
+		{ Palace(Palace{Name: getPlace(places, 4)}) }
+		{ Center(center) }
+		{ Palace(Palace{Name: getPlace(places, 5)}) }
+
+		<!-- Row 3 -->
+		{ Palace(Palace{Name: getPlace(places, 6)}) }
+		{ Palace(Palace{Name: getPlace(places, 7)}) }
+
+		<!-- Row 4 -->
+		{ Palace(Palace{Name: getPlace(places, 8)}) }
+		{ Palace(Palace{Name: getPlace(places, 9)}) }
+		{ Palace(Palace{Name: getPlace(places, 10)}) }
+		{ Palace(Palace{Name: getPlace(places, 11)}) }
+	</div>
+}

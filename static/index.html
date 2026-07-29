@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>☯ Tử Vi Đẩu Số</title>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <!-- Header -->
+    <header class="border-b bg-white px-6 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">☯</span>
+                <span class="font-semibold text-lg">Tử Vi Đẩu Số</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Form Panel -->
+        <section class="bg-white rounded-xl border p-6">
+            <h1 class="text-xl font-semibold mb-4">Lập lá số Tử Vi</h1>
+            
+            <form id="horoscope-form" class="space-y-4" hx-post="/api/stars" 
+                  hx-target="#chart-output" hx-swap="innerHTML"
+                  hx-headers='{"Content-Type": "application/json"}'
+                  hx-on::before-request="showLoading(this)" 
+                  hx-on::after-request="hideLoading(event)">
+                
+                <input type="hidden" name="is_sun" value="true" />
+                <input type="hidden" name="calendar_mode" value="lunar" />
+
+                <!-- Name -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Họ và tên</label>
+                    <input type="text" name="full_name" placeholder="Nguyễn Văn A" 
+                           class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all" />
+                </div>
+
+                <!-- Gender -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Giới tính</label>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="setGender(1, this)" class="gender-btn flex-1 border border-slate-300 rounded-lg px-3 py-2 active">Nam</button>
+                        <button type="button" onclick="setGender(-1, this)" class="gender-btn flex-1 border border-slate-300 rounded-lg px-3 py-2">Nữ</button>
+                    </div>
+                    <input type="hidden" name="gender" id="gender" value="1" />
+                </div>
+
+                <!-- Date -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Ngày sinh</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <select name="day" class="border border-slate-300 rounded-lg px-2 py-2"></select>
+                        <select name="month" class="border border-slate-300 rounded-lg px-2 py-2"></select>
+                        <input type="number" name="year" placeholder="Năm" value="2000" class="border border-slate-300 rounded-lg px-2 py-2" />
+                    </div>
+                </div>
+
+                <!-- Hour -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Giờ sinh</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <select name="hour" class="border border-slate-300 rounded-lg px-2 py-2"></select>
+                        <select name="time_period" class="border border-slate-300 rounded-lg px-2 py-2"></select>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-600 text-white rounded-lg py-3 font-medium hover:bg-indigo-700 transition-colors">
+                    Lập lá số
+                </button>
+            </form>
+        </section>
+
+        <!-- Chart Output -->
+        <section class="bg-white rounded-xl border p-6">
+            <div id="chart-empty" class="text-center py-12 text-slate-400">
+                <p class="text-4xl mb-2 opacity-20">☯</p>
+                <p class="text-sm">Nhập thông tin để lập lá số</p>
+            </div>
+            <div id="chart-output" class="hidden"></div>
+        </section>
+    </main>
+
+    <script>
+    // Populate selects
+    for(let i=1;i<=31;i++) document.querySelector('[name="day"]').innerHTML+=`<option value="${i}">${i}</option>`;
+    const months=['','Một','Hai','Ba','Bốn','Năm','Sáu','Bảy','Tám','Chín','Mười','Mười Một','Mười Hai'];
+    months.forEach((m,i)=>{if(i)document.querySelector('[name="month"]').innerHTML+=`<option value="${i}">${m}</option>`});
+    for(let i=0;i<24;i++) document.querySelector('[name="hour"]').innerHTML+=`<option value="${i}">${String(i).padStart(2,'0')}</option>`;
+
+    function setGender(v, btn) {
+        document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        btn.style.background = '#6366f1'; btn.style.color = 'white';
+        document.getElementById('gender').value = v;
+    }
+    document.querySelector('.gender-btn').classList.add('active');
+
+    function showLoading(form) {
+        document.getElementById('chart-empty').style.display = 'none';
+        document.getElementById('chart-output').innerHTML = 
+            '<div class="animate-pulse space-y-3"><div class="h-4 bg-slate-200 rounded w-32 mx-auto"></div><div class="h-8 bg-slate-200 rounded w-full"></div></div>';
+    }
+
+    function hideLoading(evt) {
+        const resp = evt.detail.xhr?.response || '';
+        if (evt.detail.failed) {
+            const empty = document.getElementById('chart-empty');
+            const output = document.getElementById('chart-output');
+            empty.style.display = 'block';
+            empty.innerHTML = '<p class="text-xl mb-2">😞</p><p class="text-sm text-red-500">Lỗi: ' + (resp || 'Không rõ') + '</p>';
+            output.innerHTML = '';
+        }
+    }
+    </script>
+</body>
+</html>

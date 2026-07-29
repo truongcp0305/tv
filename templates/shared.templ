@@ -1,0 +1,20 @@
+package templates
+
+// ─── Lunar calendar month names (Vietnamese) ──────────────────
+
+var lunarMonths = []string{
+	"Giêng", "Hai", "Ba", "Bốn", "Năm", "Sáu",
+	"Bảy", "Tám", "Chín", "Mười", "Mười Một", "Mười Hai",
+}
+
+// ─── Gender options ───────────────────────────────────────────
+
+type genderOption struct {
+	Value string
+	Label string
+}
+
+var genderOptions = []genderOption{
+	{"1", "Nam"},
+	{"-1", "Nữ"},
+}

@@ -1,0 +1,16 @@
+package templates
+
+import "tuvi/models"
+
+// RenderStarsChart displays the stars chart based on HoroscopePage data.
+templ StarsChart(page models.HoroscopePage) {
+	<div class="chart-content overflow-y-auto p-6 w-full lg:w-[60%] xl:w-[65%] min-w-0 flex flex-col">
+		if len(page.TwelvePlaces) > 0 {
+			{ BuildChartJSON(page) }
+		} else {
+			<div class="text-center text-slate-400 py-8">
+				<p>Chưa có dữ liệu sao</p>
+			</div>
+		}
+	</div>
+}

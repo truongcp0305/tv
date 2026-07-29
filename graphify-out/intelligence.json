@@ -1,0 +1,36 @@
+{
+  "hotspots": [
+    {
+      "label": "next",
+      "risk": 0.622,
+      "type": "FUNCTION"
+    },
+    {
+      "label": "client.js",
+      "risk": 0.6,
+      "type": "FUNCTION"
+    },
+    {
+      "label": "client.js",
+      "risk": 0.6,
+      "type": "FUNCTION"
+    },
+    {
+      "label": "earth_table.go",
+      "risk": 0.456,
+      "type": "FUNCTION"
+    },
+    {
+      "label": "form",
+      "risk": 0.422,
+      "type": "FUNCTION"
+    }
+  ],
+  "blast_radius": {
+    "form": 2,
+    "toggleBtn": 2,
+    "input": 2,
+    "current": 2,
+    "next": 2
+  }
+}

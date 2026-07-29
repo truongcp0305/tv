@@ -1,0 +1,199 @@
+package templates
+
+templ BirthForm(action string) {
+	<form 
+		hx-post={ action }
+		hx-target="#chart-output"
+		hx-swap="innerHTML"
+		hx-indicator="#loading-spinner"
+		class="space-y-6"
+	>
+		<!-- Full Name -->
+		<div class="space-y-2">
+			<label for="fullName" class="block text-sm font-medium text-slate-700 transition-colors">
+				Họ và tên
+			</label>
+			<input 
+				type="text" 
+				id="fullName" 
+				name="full_name"
+				placeholder="Nguyễn Văn A"
+				class="tv-input w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none transition-all"
+				autofocus
+			/>
+		</div>
+
+		<!-- Gender -->
+		<div class="space-y-2">
+			<label class="block text-sm font-medium text-slate-700">
+				Giới tính
+			</label>
+			<div class="flex gap-3">
+				<button 
+					type="button" 
+					id="btn-male"
+					class="gender-btn flex-1 rounded-lg border border-slate-300 bg-white py-3 text-center text-sm font-medium text-slate-700 hover:border-indigo-500 hover:bg-indigo-50 hover:text-indigo-600 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-200"
+				>
+					Nam
+				</button>
+				<button 
+					type="button" 
+					id="btn-female"
+					class="gender-btn flex-1 rounded-lg border border-slate-300 bg-white py-3 text-center text-sm font-medium text-slate-700 hover:border-pink-500 hover:bg-pink-50 hover:text-pink-600 transition-all focus:outline-none focus:ring-2 focus:ring-pink-200"
+				>
+					Nữ
+				</button>
+			</div>
+			<input type="hidden" id="gender" name="gender" value="1" />
+		</div>
+
+		<!-- Birth Date with Calendar Type -->
+		<div class="space-y-3">
+			<div class="flex items-center justify-between">
+				<label class="block text-sm font-medium text-slate-700">
+					Ngày sinh
+				</label>
+				<button 
+					type="button" 
+					id="calendar-toggle"
+					class="rounded-md bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-600 hover:bg-indigo-100 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-200"
+				>
+					Âm lịch
+				</button>
+			</div>
+			<input type="hidden" id="calendarMode" name="calendar_mode" value="lunar" />
+			
+			<div class="grid grid-cols-3 gap-3">
+				<!-- Day -->
+				<div class="space-y-1">
+					<select id="day" name="day" class="tv-select w-full rounded-lg border border-slate-300 bg-white px-3 py-3 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none appearance-none cursor-pointer">
+						<option value="" disabled>-- Ngày --</option>
+						for i := 1; i <= 31; i++ {
+							<option value={ i }>{ fmt.Sprintf("%d", i) }</option>
+						}
+					</select>
+				</div>
+				
+				<!-- Month -->
+				<div class="space-y-1">
+					<select id="month" name="month" class="tv-select w-full rounded-lg border border-slate-300 bg-white px-3 py-3 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none appearance-none cursor-pointer">
+						<option value="" disabled>-- Tháng --</option>
+						for _, month := range lunarMonths {
+							<option value="1">Giêng</option>
+							<option value="2">Hai</option>
+							<option value="3">Ba</option>
+							<option value="4">Bốn</option>
+							<option value="5">Năm</option>
+							<option value="6">Sáu</option>
+							<option value="7">Bảy</option>
+							<option value="8">Tám</option>
+							<option value="9">Chín</option>
+							<option value="10">Mười</option>
+							<option value="11">Mười Một</option>
+							<option value="12">Mười Hai</option>
+						}
+					</select>
+				</div>
+				
+				<!-- Year -->
+				<div class="space-y-1">
+					<input 
+						type="number" 
+						id="year" 
+						name="year" 
+						placeholder="Năm" 
+						min="1900" 
+						max="2100" 
+						value="2000"
+						class="tv-input w-full rounded-lg border border-slate-300 bg-white px-3 py-3 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none appearance-none [appearance:textfield]"
+					/>
+				</div>
+			</div>
+		</div>
+
+		<!-- Birth Hour -->
+		<div class="space-y-3">
+			<label class="block text-sm font-medium text-slate-700">
+				Giờ sinh
+			</label>
+			<div class="grid grid-cols-2 gap-3">
+				<!-- Hour -->
+				<div class="space-y-1">
+					<select id="hour" name="hour" class="tv-select w-full rounded-lg border border-slate-300 bg-white px-3 py-3 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none appearance-none cursor-pointer">
+						<option value="" disabled>-- Giờ --</option>
+						for i := 0; i < 24; i++ {
+							<option value={ i }>{ fmt.Sprintf("%02d:00", i) }</option>
+						}
+					</select>
+				</div>
+				
+				<!-- Time Period -->
+				<div class="space-y-1">
+					<select id="timePeriod" name="time_period" class="tv-select w-full rounded-lg border border-slate-300 bg-white px-3 py-3 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none appearance-none cursor-pointer">
+						<option value="">Nhóm giờ</option>
+						<option value="ti">Tý (23–1)</option>
+						<option value="su">Sửu (1–3)</option>
+						<option value="dan">Dần (3–5)</option>
+						<option value="mao">Mão (5–7)</option>
+						<option value="thin">Thìn (7–9)</option>
+						<option value="ti2">Tỵ (9–11)</option>
+						<option value="ngo">Ngọ (11–13)</option>
+						<option value="mui">Mùi (13–15)</option>
+						<option value="than">Thân (15–17)</option>
+						<option value="dau">Dậu (17–19)</option>
+						<option value="tuat">Tuất (19–21)</option>
+						<option value="hoi">Hợi (21–23)</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<!-- Province / City -->
+		<div class="space-y-2">
+			<label for="province" class="block text-sm font-medium text-slate-700">
+				Tỉnh / Thành phố
+			</label>
+			<select id="province" name="province" class="tv-select w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none appearance-none cursor-pointer">
+				<option value="" disabled>-- Chọn địa điểm --</option>
+				<option value="hanoi">Hà Nội</option>
+				<option value="hcm">TP. Hồ Chí Minh</option>
+				<option value="danang">Đà Nẵng</option>
+				<option value="haiphong">Hải Phòng</option>
+				<option value="cantho">Cần Thơ</option>
+				<option value="dadongnai">Đồng Nai</option>
+				<option value="binhduong">Bình Dương</option>
+				<option value="other">Khác...</option>
+			</select>
+		</div>
+
+		<!-- Action Buttons -->
+		<div class="pt-4 space-y-3">
+			<!-- Loading Indicator -->
+			<div id="loading-spinner" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm items-center justify-center z-50">
+				<div class="bg-white p-8 rounded-xl shadow-2xl">
+					<div class="flex items-center space-x-4">
+						<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+						<span class="text-lg font-medium text-slate-700">Đang lập lá số...</span>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Generate Button -->
+			<button 
+				type="submit" 
+				class="w-full rounded-lg bg-indigo-600 px-4 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 active:bg-indigo-700 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2"
+			>
+				Lập lá số
+			</button>
+			
+			<!-- Reset Button -->
+			<button 
+				type="reset" 
+				onclick="resetGenderButtons()"
+				class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-all focus:outline-none focus:ring-2 focus:ring-slate-200 focus:ring-offset-2"
+			>
+				Đặt lại
+			</button>
+		</div>
+	</form>
+}

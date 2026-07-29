@@ -1,0 +1,38 @@
+package templates
+
+// ChartGrid renders the 4x4 Zi Wei chart layout.
+templ ChartGrid() {
+	<div class="w-full max-w-5xl mx-auto">
+		<div class="chart-grid grid grid-cols-4 gap-[2px] bg-slate-300 border border-slate-300 rounded-lg overflow-hidden">
+			<!-- Row 1: Palaces 1, 2, 3, 4 -->
+			{ PalaceCard(1) }
+			{ PalaceCard(2) }
+			{ PalaceCard(3) }
+			{ PalaceCard(4) }
+
+			<!-- Row 2: Palace 5, Center (col-span=2, row-span=2), Palace 6 -->
+			{ PalaceCard(5) }
+			<div class="col-span-2 row-span-2 flex flex-col items-center justify-center p-4 text-slate-300 select-none">
+				<span class="text-5xl opacity-20 mb-1">☯</span>
+				<span class="text-sm font-medium tracking-wider opacity-30">TRUNG TÂM</span>
+			</div>
+			{ PalaceCard(6) }
+
+			<!-- Row 3: Palace 7, (center continued), Palace 8 -->
+			{ PalaceCard(7) }
+			{ PalaceCard(8) }
+
+			<!-- Row 4: Palaces 9, 10, 11, 12 -->
+			{ PalaceCard(9) }
+			{ PalaceCard(10) }
+			{ PalaceCard(11) }
+			{ PalaceCard(12) }
+		</div>
+	</div>
+}
+
+templ PalaceCard(num int) {
+	<div class="bg-white min-h-[120px] flex items-center justify-center select-none border-slate-200">
+		<span class="text-5xl font-extrabold opacity-10">{{ num }}</span>
+	</div>
+}

@@ -1,0 +1,26 @@
+package templates
+
+type CenterInfo struct {
+	Name        string
+	Gender      string
+	SolarDate   string
+	LunarDate   string
+	FiveElement string
+	Destiny     string
+	Age         int
+}
+
+templ Center(info CenterInfo) {
+	<div class="col-span-2 row-span-2 flex flex-col items-center justify-center p-2 lg:p-4 text-slate-500 select-none bg-white min-h-[120px] lg:min-h-[140px] xl:min-h-[180px]">
+		<div class="space-y-2 w-full max-w-[140px] lg:max-w-[180px] text-center">
+			<span class="text-3xl lg:text-5xl opacity-15 block mb-1">☯</span>
+			<div class="text-xs"><span class="text-slate-400 block text-[10px]">Name</span>    {{ info.Name }}</div>
+			<div class="text-xs"><span class="text-slate-400 block text-[10px]">Gender</span> {{ info.Gender }}</div>
+			<div class="text-xs"><span class="text-slate-400 block text-[10px]">Solar</span>  {{ info.SolarDate }}</div>
+			<div class="text-xs"><span class="text-slate-400 block text-[10px]">Lunar</span>  {{ info.LunarDate }}</div>
+			<div class="text-xs"><span class="text-slate-400 block text-[10px]">Element</span> {{ info.FiveElement }}</div>
+			<div class="text-xs"><span class="text-slate-400 block text-[10px]">Destiny</span> {{ info.Destiny }}</div>
+			<div class="text-xs"><span class="text-slate-400 block text-[10px]">Age</span>    {{ info.Age }}</div>
+		</div>
+	</div>
+}

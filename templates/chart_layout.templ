@@ -1,0 +1,43 @@
+package templates
+
+// ChartGrid renders a 4x4 CSS Grid with:
+// - Row 0: Palace 1, 2, 3, 4
+// - Row 1: Palace 5, Center (spans 2 rows x 2 cols), Palace 6
+// - Row 2: Palace 7, (center continues), Palace 8
+// - Row 3: Palace 9, 10, 11, 12
+
+templ ChartGrid() {
+	<div class="w-full max-w-5xl mx-auto">
+		<div class="chart-grid grid grid-cols-4 gap-[2px] bg-slate-300 border border-slate-300 rounded-lg overflow-hidden">
+
+			<!-- Row 1: Palaces 1, 2, 3, 4 -->
+			{ PalacePlaceholder(1) }
+			{ PalacePlaceholder(2) }
+			{ PalacePlaceholder(3) }
+			{ PalacePlaceholder(4) }
+
+			<!-- Row 2: Palace 5, Center (row-span=2, col-span=2), Palace 6 -->
+			{ PalacePlaceholder(5) }
+			<div class="col-span-2 row-span-2 flex items-center justify-center text-slate-300 select-none">
+				<span class="text-4xl opacity-20">☯</span>
+			</div>
+			{ PalacePlaceholder(6) }
+
+			<!-- Row 3: Palace 7, (center continued implicitly by row-span), Palace 8 -->
+			{ PalacePlaceholder(7) }
+			{ PalacePlaceholder(8) }
+
+			<!-- Row 4: Palaces 9, 10, 11, 12 -->
+			{ PalacePlaceholder(9) }
+			{ PalacePlaceholder(10) }
+			{ PalacePlaceholder(11) }
+			{ PalacePlaceholder(12) }
+		</div>
+	</div>
+}
+
+templ PalacePlaceholder(num int) {
+	<div class="bg-white min-h-[130px] flex items-center justify-center text-slate-200 select-none">
+		<span class="text-4xl font-bold opacity-20">{{ num }}</span>
+	</div>
+}

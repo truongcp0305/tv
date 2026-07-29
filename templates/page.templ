@@ -1,0 +1,43 @@
+package templates
+
+import "tuvi/models"
+
+templ Index(result string, starsData models.HoroscopePage) {
+	Base("Trang chủ", PageContent(result, starsData))
+}
+
+templ PageContent(result string, starsData models.HoroscopePage) {
+	<div class="h-screen flex flex-col">
+		<!-- Header -->
+		<header class="border-b border-[#e2e8f0] bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+			<div class="max-w-screen-2xl mx-auto px-6 h-14 flex items-center justify-between">
+				<a href="/" class="flex items-center gap-2.5">
+					<span class="text-xl">☯</span>
+					<span class="font-semibold text-base tracking-tight text-slate-900">Tử Vi Đẩu Số</span>
+				</a>
+				<nav class="hidden sm:flex items-center gap-6">
+					<a href="/" class="text-sm text-indigo-600 font-medium">Tra cứu</a>
+					<span class="text-sm text-slate-400">•</span>
+					<a href="#" class="text-sm text-slate-500 hover:text-slate-700 transition-colors">Giải nghĩa sao</a>
+					<span class="text-sm text-slate-400">•</span>
+					<a href="#" class="text-sm text-slate-500 hover:text-slate-700 transition-colors">Hướng dẫn</a>
+				</nav>
+			</div>
+		</header>
+
+		<!-- Main Content -->
+		<main class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+			{ FormPanel("") }
+			if result == "" && len(starsData.TwelvePlaces) == 0 {
+				{ PlaceholderChart() }
+			} else if len(starsData.TwelvePlaces) > 0 {
+				{ StarsChart(starsData) }
+			}
+		</main>
+
+		<!-- Footer -->
+		<footer class="border-t border-[#e2e8f0] bg-white px-6 py-3 text-center">
+			<p class="text-xs text-slate-400">Tử Vi Đẩu Số — Chỉ mang tính chất tham khảo.</p>
+		</footer>
+	</div>
+}

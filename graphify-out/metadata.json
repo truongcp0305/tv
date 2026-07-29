@@ -1,0 +1,27 @@
+{
+  "projectName": "src",
+  "communityLabels": {
+    "0": "Community 0",
+    "1": "Community 1",
+    "2": "Community 2",
+    "3": "Community 3",
+    "4": "unknown",
+    "5": "unknown",
+    "6": "unknown"
+  },
+  "communitySummaries": {
+    "0": "",
+    "1": "",
+    "2": "",
+    "3": "",
+    "4": "Unable to determine domain due to missing code entities.",
+    "5": "Unable to determine domain due to missing code entities.",
+    "6": "Unable to determine domain due to missing code entities."
+  },
+  "communityLinks": {
+    "0": {
+      "1": 18
+    },
+    "1": {}
+  }
+}

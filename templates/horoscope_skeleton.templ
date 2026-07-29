@@ -1,0 +1,80 @@
+package templates
+
+import "tuvi/models"
+
+type HoroscopeSkeletonProps struct {
+	Data models.HoroscopePage
+}
+
+// showPlace checks if a place exists at the given index.
+func showPlace(places []models.Place, idx int) bool {
+	return idx < len(places)
+}
+
+templ HoroscopeSkeleton() {
+	<div class="w-full overflow-x-auto">
+		<div class="chart-grid grid grid-cols-4 gap-[1px] bg-slate-300 border border-slate-300 rounded-lg overflow-hidden w-fit min-w-[400px] lg:min-w-0">
+
+			<!-- Row 1 -->
+			{ skeletonPalace() }
+			{ skeletonPalace() }
+			{ skeletonPalace() }
+			{ skeletonPalace() }
+
+			<!-- Row 2 -->
+			{ skeletonPalace() }
+			<skeletonCenter />
+			{ skeletonPalace() }
+
+			<!-- Row 3 -->
+			{ skeletonPalace() }
+			{ skeletonPalace() }
+
+			<!-- Row 4 -->
+			{ skeletonPalace() }
+			{ skeletonPalace() }
+			{ skeletonPalace() }
+			{ skeletonPalace() }
+		</div>
+	</div>
+}
+
+templ skeletonPalace() {
+	<div class="bg-white min-h-[140px] flex flex-col animate-pulse">
+		<!-- Header -->
+		<div class="px-2 py-1 border-b border-slate-200 flex items-center justify-between">
+			<div class="h-3 bg-slate-200 rounded w-16"></div>
+			<div class="flex gap-1">
+				<div class="h-2.5 bg-slate-200 rounded w-6"></div>
+				<div class="h-2.5 bg-slate-200 rounded w-8"></div>
+			</div>
+		</div>
+		<!-- Stars -->
+		<div class="flex-1 px-2 py-1 space-y-1">
+			<div class="h-2.5 bg-slate-200 rounded w-full"></div>
+			<div class="h-2.5 bg-slate-200 rounded w-3/4"></div>
+			<div class="h-2.5 bg-slate-200 rounded w-1/2"></div>
+		</div>
+		<!-- Footer -->
+		<div class="px-2 py-1 border-t border-slate-200">
+			<div class="h-2 bg-slate-200 rounded w-12"></div>
+		</div>
+	</div>
+}
+
+templ skeletonCenter() {
+	<div class="col-span-2 row-span-2 bg-white flex flex-col items-center justify-center p-4 animate-pulse">
+		<div class="space-y-3 w-full max-w-[180px] text-center">
+			<div class="h-8 w-8 mx-auto bg-slate-200 rounded-full"></div>
+			<div class="space-y-2">
+				<div class="h-2.5 bg-slate-200 rounded w-20 mx-auto"></div>
+				<div class="h-2.5 bg-slate-200 rounded w-16 mx-auto"></div>
+				<div class="h-2.5 bg-slate-200 rounded w-24 mx-auto"></div>
+				<div class="h-2.5 bg-slate-200 rounded w-20 mx-auto"></div>
+				<div class="h-2.5 bg-slate-200 rounded w-16 mx-auto"></div>
+				<div class="h-2.5 bg-slate-200 rounded w-24 mx-auto"></div>
+				<div class="h-2.5 bg-slate-200 rounded w-12 mx-auto"></div>
+			</div>
+		</div>
+	</div>
+}

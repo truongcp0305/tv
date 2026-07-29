@@ -1,0 +1,124 @@
+package templates
+
+import "tuvi/models"
+
+type HoroscopeData struct {
+	Palaces  []models.Place
+	Center   CenterInfo
+	Loading  bool
+}
+
+// horoscopeContainer wraps the chart area with HTMX attributes.
+templ horoscopeContainer(data HoroscopeData, content templ.Component) {
+	<div id="horoscope"
+	     hx-post="/api/stars"
+	     hx-target="#horoscope"
+	     hx-swap="innerHTML"
+	     hx-indicator="#loading-overlay">
+		{ if data.Loading { HoroscopeSkeleton() } else { content } }
+	</div>
+}
+
+templ HoroscopeGrid(data HoroscopeData) {
+	<horoscopeContainer(data, gridContent(data)) />
+}
+
+templ gridContent(data HoroscopeData) {
+	<div class="w-full overflow-x-auto">
+		<div class="chart-grid grid grid-cols-4 gap-[1px] bg-slate-300 border border-slate-300 rounded-lg overflow-hidden w-fit min-w-[400px] lg:min-w-0">
+
+			<!-- Row 1: Palaces 0–3 -->
+			{ Palace(Palace{Name: getPlace(data.Palaces, 0)}) }
+			{ Palace(Palace{Name: getPlace(data.Palaces, 1)}) }
+			{ Palace(Palace{Name: getPlace(data.Palaces, 2)}) }
+			{ Palace(Palace{Name: getPlace(data.Palaces, 3)}) }
+
+			<!-- Row 2: Palace 4, Center, Palace 5 -->
+			{ Palace(Palace{Name: getPlace(data.Palaces, 4)}) }
+			{ Center(data.Center) }
+			{ Palace(Palace{Name: getPlace(data.Palaces, 5)}) }
+
+			<!-- Row 3: Palaces 6, 7 -->
+			{ Palace(Palace{Name: getPlace(data.Palaces, 6)}) }
+			{ Palace(Palace{Name: getPlace(data.Palaces, 7)}) }
+
+			<!-- Row 4: Palaces 8–11 -->
+			{ Palace(Palace{Name: getPlace(data.Palaces, 8)}) }
+			{ Palace(Palace{Name: getPlace(data.Palaces, 9)}) }
+			{ Palace(Palace{Name: getPlace(data.Palaces, 10)}) }
+			{ Palace(Palace{Name: getPlace(data.Palaces, 11)}) }
+		</div>
+	</div>
+}
+
+func getPlace(places []models.Place, idx int) string {
+	if idx < len(places) {
+		return places[idx].PlaceName
+	}
+	return ""
+}
+
+templ Center(info CenterInfo) {
+	<div class="col-span-2 row-span-2 flex flex-col items-center justify-center p-2 lg:p-4 text-slate-500 select-none bg-white min-h-[120px] lg:min-h-[140px] xl:min-h-[180px]">
+		<div class="space-y-2 w-full max-w-[140px] lg:max-w-[180px] text-center">
+			<span class="text-3xl lg:text-5xl opacity-15 block mb-1">☯</span>
+			<div class="text-xs"><span class="text-slate-400 block text-[10px]">Name</span>    {{ info.Name }}</div>
+			<div class="text-xs"><span class="text-slate-400 block text-[10px]">Gender</span> {{ info.Gender }}</div>
+			<div class="text-xs"><span class="text-slate-400 block text-[10px]">Solar</span>  {{ info.SolarDate }}</div>
+			<div class="text-xs"><span class="text-slate-400 block text-[10px]">Lunar</span>  {{ info.LunarDate }}</div>
+			<div class="text-xs"><span class="text-slate-400 block text-[10px]">Element</span> {{ info.FiveElement }}</div>
+			<div class="text-xs"><span class="text-slate-400 block text-[10px]">Destiny</span> {{ info.Destiny }}</div>
+			<div class="text-xs"><span class="text-slate-400 block text-[10px]">Age</span>    {{ info.Age }}</div>
+		</div>
+	</div>
+}
+
+templ palace(p Palace) {
+	<div class="bg-white min-h-[120px] lg:min-h-[140px] xl:min-h-[160px] border border-slate-300 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-indigo-400 flex flex-col">
+		<div class="px-1.5 py-1 lg:px-2 lg:py-1 border-b border-slate-200 flex items-center justify-between shrink-0">
+			<span class="text-xs lg:text-sm font-medium text-slate-900 truncate">{ p.Name }</span>
+			<div class="flex gap-1 lg:gap-1.5 text-[10px] lg:text-xs shrink-0">
+				@if p.Stem != "" {
+					<span class="font-medium text-slate-700">{ p.Stem }</span>
+				}
+				@if p.Branch != "" {
+					<span class="font-medium text-slate-600">{ p.Branch }</span>
+				}
+			</div>
+		</div>
+		<div class="flex-1 px-1.5 py-1 lg:px-2 lg:py-1 space-y-0.5 overflow-hidden">
+			for _, star := range p.Stars {
+				@if star.Type == 1 {
+					<div class="font-semibold text-xs lg:text-sm leading-tight { starColorClass(star.Color) }">{ star.Name }</div>
+				} else {
+					<div class="text-xs lg:text-sm leading-tight opacity-80 { starColorClass(star.Color) }">{ star.Name }</div>
+				}
+			}
+		</div>
+		<div class="px-1.5 py-1 lg:px-2 lg:py-1 border-t border-slate-200 text-[10px] lg:text-xs space-y-0.5 shrink-0">
+			@if p.LongLife != "" {
+				<div class="text-slate-500">Đại hạn: { p.LongLife }</div>
+			}
+			@if p.MajorCycle != "" {
+				<div class="text-slate-400">Tiểu hạn: { p.MajorCycle }</div>
+			}
+			@if p.MinorCycle != "" {
+				<div class="text-slate-400">Tư mệnh: { p.MinorCycle }</div>
+			}
+		</div>
+	</div>
+}
+
+func starColorClass(color string) string {
+	c := strings.ToLower(color)
+	switch c {
+	case "red", "hung":
+		return "text-red-600"
+	case "blue", "lam":
+		return "text-blue-600"
+	case "green", "xanh":
+		return "text-green-600"
+	default:
+		return "text-slate-700"
+	}
+}

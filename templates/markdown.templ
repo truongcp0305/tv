@@ -1,0 +1,7 @@
+package templates
+
+templ RenderMarkdown(content string) {
+	<div class="max-w-full">
+		{ content HTML=simpleHTML(content) }
+	</div>
+}

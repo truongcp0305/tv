@@ -1,0 +1,24 @@
+package templates
+
+templ PlaceholderChart() {
+	<section class="w-full lg:w-[60%] xl:w-[65%] min-w-0 flex flex-col">
+		<div class="px-6 lg:px-8 pt-8 pb-4 h-full flex flex-col">
+			<!-- Empty state -->
+			<div class="flex-1 flex flex-col items-center justify-center text-center py-20">
+				<span class="text-5xl mb-4 opacity-20">☯</span>
+				<h2 class="text-lg font-medium text-slate-400">Lá số Tử Vi</h2>
+				<p class="mt-1.5 text-sm text-slate-400 max-w-xs">
+					Nhập thông tin bên trái rồi bấm <strong>Xem tử vi</strong> để hiển thị.
+				</p>
+			</div>
+		</div>
+	</section>
+}
+
+templ ChartResult(content string) {
+	<section class="w-full lg:w-[60%] xl:w-[65%] min-w-0 flex flex-col">
+		<div class="px-6 lg:px-8 pt-6 pb-8 h-full flex flex-col overflow-auto">
+			{ RenderMarkdown(content) }
+		</div>
+	</section>
+}
