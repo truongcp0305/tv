@@ -1,13 +1,17 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -47,13 +51,43 @@ func loggingMiddleware(next http.Handler) http.Handler {
 }
 
 func starsHandler(w http.ResponseWriter, r *http.Request) {
-	// 1. Parse
+	// 1. Parse - support both JSON and form data
 	var req StarRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		log.Printf("  ✗ JSON decode: %v", err)
+	
+	// Read the body content first (can only be read once)
+	bodyBytes, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Printf("  ✗ Read body error: %v", err)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]any{"success": false, "error": err.Error()})
 		return
+	}
+	// Close the original body
+	r.Body.Close()
+
+	// Try to parse JSON first (Content-Type: application/json)
+	err = json.NewDecoder(bytes.NewReader(bodyBytes)).Decode(&req)
+	if err != nil {
+		// If JSON parsing failed, try parsing form data
+		// Parse form from the body content
+		form := url.Values{}
+		for _, line := range strings.Split(string(bodyBytes), "&") {
+			parts := strings.Split(line, "=")
+			if len(parts) == 2 {
+				form.Add(parts[0], parts[1])
+			}
+		}
+		// Fill req from form values
+		req.Day, _ = strconv.Atoi(form.Get("day"))
+		req.Month, _ = strconv.Atoi(form.Get("month"))
+		req.Year, _ = strconv.Atoi(form.Get("year"))
+		req.Hour, _ = strconv.Atoi(form.Get("hour"))
+		req.Gender, _ = strconv.Atoi(form.Get("gender"))
+		req.IsSun = form.Get("is_sun")
+		req.FullName = form.Get("full_name")
+		req.Calendar = form.Get("calendar_mode")
+	} else {
+		// Successfully parsed JSON
 	}
 
 	// Convert IsSun from string to bool
@@ -215,7 +249,7 @@ func renderChart(buf *strings.Builder, page *models.HoroscopePage, req StarReque
 	renderPlace(buf, places, 10)
 	renderPlace(buf, places, 11)
 
-	buf.WriteString(`</div>`) 
+	buf.WriteString(`</div>`)
 	return nil
 }
 
@@ -238,7 +272,7 @@ func renderPlace(buf *strings.Builder, places []models.Place, idx int) {
 	// Stars - split into 2 columns: left for StarType < 10, right for StarType >= 10
 	buf.WriteString(`<div class="flex-1 px-2 py-1 overflow-hidden">`)
 	buf.WriteString(`<div class="grid grid-cols-2 gap-2 h-full">`)
-	
+
 	// Left column: StarType < 10
 	buf.WriteString(`<div class="space-y-0.5 overflow-y-auto">`)
 	mainCount := 0
@@ -262,7 +296,7 @@ func renderPlace(buf *strings.Builder, places []models.Place, idx int) {
 		buf.WriteString(`<div class="text-xs text-slate-400 italic text-sm">Vô chính diệu</div>`)
 	}
 	buf.WriteString(`</div>`)
-	
+
 	// Right column: StarType >= 10
 	buf.WriteString(`<div class="space-y-0.5 overflow-y-auto">`)
 	for _, s := range p.Stars {
@@ -440,4 +474,3 @@ func truncate(s string, n int) string {
 	}
 	return s[:n] + "..."
 }
-

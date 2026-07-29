@@ -115,6 +115,30 @@
             output.innerHTML = '';
         }
     }
+
+    // Override HTMX to send JSON instead of form data
+    document.addEventListener('htmx:configRequest', function(event) {
+        if (event.target.id === 'horoscope-form') {
+            event.detail.headers['Content-Type'] = 'application/json';
+            event.detail.verb = 'post';
+            // Convert form data to JSON and store in request body
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            // Convert boolean fields
+            data.is_sun = formData.get('is_sun') === 'true';
+            data.gender = parseInt(formData.get('gender'));
+            data.day = parseInt(formData.get('day'));
+            data.month = parseInt(formData.get('month'));
+            data.year = parseInt(formData.get('year'));
+            data.hour = parseInt(formData.get('hour'));
+            event.detail.requestBody = JSON.stringify(data);
+            event.detail.preventRemove = true;
+        }
+    });
     </script>
 </body>
 </html>
