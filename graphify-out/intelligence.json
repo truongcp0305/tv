@@ -1,36 +1,36 @@
 {
   "hotspots": [
     {
-      "label": "next",
-      "risk": 0.622,
-      "type": "FUNCTION"
-    },
-    {
       "label": "client.js",
-      "risk": 0.6,
-      "type": "FUNCTION"
-    },
-    {
-      "label": "client.js",
-      "risk": 0.6,
+      "risk": 0.8,
       "type": "FUNCTION"
     },
     {
       "label": "earth_table.go",
-      "risk": 0.456,
+      "risk": 0.711,
       "type": "FUNCTION"
     },
     {
-      "label": "form",
-      "risk": 0.422,
+      "label": "FlexibleInt",
+      "risk": 0.644,
+      "type": "FUNCTION"
+    },
+    {
+      "label": "HoroscopePage",
+      "risk": 0.622,
+      "type": "FUNCTION"
+    },
+    {
+      "label": "Place",
+      "risk": 0.622,
       "type": "FUNCTION"
     }
   ],
   "blast_radius": {
-    "form": 2,
-    "toggleBtn": 2,
-    "input": 2,
-    "current": 2,
-    "next": 2
+    "FlexibleInt": 2,
+    "HoroscopePage": 1,
+    "Place": 1,
+    "Star": 1,
+    "YearStar": 1
   }
 }

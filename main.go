@@ -53,7 +53,7 @@ func loggingMiddleware(next http.Handler) http.Handler {
 func starsHandler(w http.ResponseWriter, r *http.Request) {
 	// 1. Parse - support both JSON and form data
 	var req StarRequest
-	
+
 	// Read the body content first (can only be read once)
 	bodyBytes, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -224,44 +224,68 @@ func healthHandler(w http.ResponseWriter, _ *http.Request) {
 // --- HTML Rendering ---
 
 func renderChart(buf *strings.Builder, page *models.HoroscopePage, req StarRequest) error {
-	buf.WriteString(`<div class="chart-grid w-full overflow-x-auto" style="min-width: min(100%, 600px)"><div class="grid grid-cols-4 gap-[1px] bg-slate-300 border border-slate-300 rounded-lg overflow-hidden">`)
+	adjustedPlaces := normalizeChartPlaces(page.TwelvePlaces)
 
-	places := page.TwelvePlaces
+	// Arrange in an explicit 4x4 matrix so browser auto-placement cannot shift cells.
+	buf.WriteString(`<div class="chart-grid w-full overflow-x-auto"><div class="grid grid-cols-4 gap-[1px] bg-slate-300 border border-slate-300 rounded-lg overflow-hidden" style="min-width: 760px">`)
 
-	// Row 1: 0-3
-	renderPlace(buf, places, 0)
-	renderPlace(buf, places, 1)
-	renderPlace(buf, places, 2)
-	renderPlace(buf, places, 3)
+	// Row 1: P1 P2 P3 P4
+	renderPlaceAt(buf, adjustedPlaces, 0, 1, 1)
+	renderPlaceAt(buf, adjustedPlaces, 1, 1, 2)
+	renderPlaceAt(buf, adjustedPlaces, 2, 1, 3)
+	renderPlaceAt(buf, adjustedPlaces, 3, 1, 4)
 
-	// Row 2: 4, center, 5
-	renderPlace(buf, places, 4)
-	renderCenter(buf, page, req)
-	renderPlace(buf, places, 5)
+	// Row 2: P12 [CENTER starts] P5
+	renderPlaceAt(buf, adjustedPlaces, 11, 2, 1)
+	renderCenterAt(buf, page, req)
+	renderPlaceAt(buf, adjustedPlaces, 4, 2, 4)
 
-	// Row 3: 6, 7
-	renderPlace(buf, places, 6)
-	renderPlace(buf, places, 7)
+	// Row 3: P11 [CENTER continues] P6
+	renderPlaceAt(buf, adjustedPlaces, 10, 3, 1)
+	renderPlaceAt(buf, adjustedPlaces, 5, 3, 4)
 
-	// Row 4: 8-11
-	renderPlace(buf, places, 8)
-	renderPlace(buf, places, 9)
-	renderPlace(buf, places, 10)
-	renderPlace(buf, places, 11)
+	// Row 4: P10 P9 P8 P7
+	renderPlaceAt(buf, adjustedPlaces, 9, 4, 1)
+	renderPlaceAt(buf, adjustedPlaces, 8, 4, 2)
+	renderPlaceAt(buf, adjustedPlaces, 7, 4, 3)
+	renderPlaceAt(buf, adjustedPlaces, 6, 4, 4)
 
-	buf.WriteString(`</div>`)
+	buf.WriteString(`</div></div>`)
 	return nil
 }
 
+func renderPlaceAt(buf *strings.Builder, places []models.Place, idx, row, col int) {
+	buf.WriteString(`<div style="grid-row: ` + strconv.Itoa(row) + `; grid-column: ` + strconv.Itoa(col) + `;">`)
+	renderPlace(buf, places, idx)
+	buf.WriteString(`</div>`)
+}
+
+func renderCenterAt(buf *strings.Builder, page *models.HoroscopePage, req StarRequest) {
+	buf.WriteString(`<div style="grid-row: 2 / span 2; grid-column: 2 / span 2;">`)
+	renderCenter(buf, page, req)
+	buf.WriteString(`</div>`)
+}
+
+func normalizeChartPlaces(places []models.Place) []models.Place {
+	// Some responses include a placeholder at index 0 (13 items total).
+	if len(places) == 13 {
+		return places[1:13]
+	}
+	if len(places) > 12 {
+		return places[len(places)-12:]
+	}
+	return places
+}
+
 func renderPlace(buf *strings.Builder, places []models.Place, idx int) {
-	sz := "min-h-[120px] xl:min-h-[160px]"
+	sz := "h-[220px] xl:h-[260px]"
 	if idx >= len(places) {
 		buf.WriteString(`<div class="bg-white ` + sz + ` border border-slate-300 flex flex-col opacity-30"><div class="mx-2 mt-2 h-3 bg-slate-200 rounded w-12"></div></div>`)
 		return
 	}
 
 	p := places[idx]
-	buf.WriteString(`<div class="bg-white ` + sz + ` border border-slate-300 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-indigo-400 flex flex-col">`)
+	buf.WriteString(`<div class="bg-white ` + sz + ` border border-slate-300 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-indigo-400 flex flex-col overflow-hidden">`)
 
 	// Header: place name
 	buf.WriteString(`<div class="px-2 py-1 border-b border-slate-200 flex items-center justify-between shrink-0">`)
@@ -320,6 +344,7 @@ func renderPlace(buf *strings.Builder, places []models.Place, idx int) {
 	}
 	buf.WriteString(`</div>`)
 	buf.WriteString(`</div>`)
+	buf.WriteString(`</div>`)
 	// Footer: Great period
 	if p.GreatPeriod > 0 {
 		buf.WriteString(`<div class="px-2 py-1 border-t border-slate-200 text-xs text-slate-500 shrink-0">Đại hạn: ` + fmt.Sprintf("%d", p.GreatPeriod) + `</div>`)
@@ -332,7 +357,7 @@ func renderPlace(buf *strings.Builder, places []models.Place, idx int) {
 }
 
 func renderCenter(buf *strings.Builder, page *models.HoroscopePage, req StarRequest) {
-	buf.WriteString(`<div class="col-span-2 row-span-2 flex flex-col items-center justify-center p-4 text-slate-500 select-none bg-white min-h-[140px] xl:min-h-[200px]">`)
+	buf.WriteString(`<div class="col-span-2 row-span-2 flex flex-col items-center justify-center p-4 text-slate-500 select-none bg-white min-h-[120px] xl:min-h-[180px]">`)
 	buf.WriteString(`<div class="space-y-2 w-full max-w-[180px] text-center">`)
 	buf.WriteString(`<span class="text-5xl opacity-15 block mb-1">☯</span>`)
 

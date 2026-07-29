@@ -1,11 +1,10 @@
 # form
 
-> God node · 2 connections · [D:\dev\letcoode\src\static\client.js](file:///D:/dev/letcoode/src/static/client.js#L3)
+> God node · 1 connections · [D:\dev\letcoode\src\static\client.js](file:///D:/dev/letcoode/src/static/client.js#L3)
 
 ## Connections by Relation
 
 ### contains
-- [[client.js]] `EXTRACTED`
 - [[client.js]] `EXTRACTED`
 
 ---

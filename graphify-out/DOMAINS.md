@@ -8,4 +8,3 @@
 | 3 | Community 3 |  |
 | 4 | Community 4 | Unable to determine domain due to missing code entities. |
 | 5 | Community 5 | Unable to determine domain due to missing code entities. |
-| 6 | Community 6 | Unable to determine domain due to missing code entities. |

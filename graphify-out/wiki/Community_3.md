@@ -1,11 +1,10 @@
 # Community 3
 
-> 2 nodes · cohesion 1.00
+> 1 nodes · cohesion 1.00
 
 ## Key Concepts
 
-- [input.go](file:///D:/dev/letcoode/src/models/input.go#L1) (1 connections)
-- [InputData](file:///D:/dev/letcoode/src/models/input.go#L3) (1 connections)
+- [const.go](file:///D:/dev/letcoode/src/models/const.go#L1) (0 connections)
 
 ## Relationships
 
@@ -13,11 +12,11 @@
 
 ## Source Files
 
-- [D:\dev\letcoode\src\models\input.go](file:///D:/dev/letcoode/src/models/input.go)
+- [D:\dev\letcoode\src\models\const.go](file:///D:/dev/letcoode/src/models/const.go)
 
 ## Audit Trail
 
-- EXTRACTED: 2 (100%)
+- EXTRACTED: 0 (0%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

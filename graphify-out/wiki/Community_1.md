@@ -1,19 +1,16 @@
 # Community 1
 
-> 10 nodes · cohesion 0.20
+> 7 nodes · cohesion 0.29
 
 ## Key Concepts
 
-- [client.js](file:///D:/dev/letcoode/src/static/client.js#L1) (18 connections)
-- [current](file:///D:/dev/letcoode/src/static/client.js#L11) (2 connections)
-- [data](file:///D:/dev/letcoode/src/static/client.js#L46) (2 connections)
-- [existingChart](file:///D:/dev/letcoode/src/static/client.js#L86) (2 connections)
-- [form](file:///D:/dev/letcoode/src/static/client.js#L3) (2 connections)
-- [genderInput](file:///D:/dev/letcoode/src/static/client.js#L20) (2 connections)
-- [input](file:///D:/dev/letcoode/src/static/client.js#L10) (2 connections)
-- [month](file:///D:/dev/letcoode/src/static/client.js#L53) (2 connections)
-- [toggleBtn](file:///D:/dev/letcoode/src/static/client.js#L7) (2 connections)
-- [year](file:///D:/dev/letcoode/src/static/client.js#L54) (2 connections)
+- [earth_table.go](file:///D:/dev/letcoode/src/models/earth_table.go#L1) (5 connections)
+- [FlexibleInt](file:///D:/dev/letcoode/src/models/earth_table.go#L55) (2 connections)
+- [.UnmarshalJSON()](file:///D:/dev/letcoode/src/models/earth_table.go#L57) (1 connections)
+- [HoroscopePage](file:///D:/dev/letcoode/src/models/earth_table.go#L10) (1 connections)
+- [Place](file:///D:/dev/letcoode/src/models/earth_table.go#L26) (1 connections)
+- [Star](file:///D:/dev/letcoode/src/models/earth_table.go#L43) (1 connections)
+- [YearStar](file:///D:/dev/letcoode/src/models/earth_table.go#L89) (1 connections)
 
 ## Relationships
 
@@ -21,11 +18,11 @@
 
 ## Source Files
 
-- [D:\dev\letcoode\src\static\client.js](file:///D:/dev/letcoode/src/static/client.js)
+- [D:\dev\letcoode\src\models\earth_table.go](file:///D:/dev/letcoode/src/models/earth_table.go)
 
 ## Audit Trail
 
-- EXTRACTED: 36 (100%)
+- EXTRACTED: 12 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

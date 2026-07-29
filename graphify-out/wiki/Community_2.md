@@ -1,16 +1,11 @@
 # Community 2
 
-> 7 nodes · cohesion 0.29
+> 2 nodes · cohesion 1.00
 
 ## Key Concepts
 
-- [earth_table.go](file:///D:/dev/letcoode/src/models/earth_table.go#L1) (5 connections)
-- [FlexibleInt](file:///D:/dev/letcoode/src/models/earth_table.go#L55) (2 connections)
-- [.UnmarshalJSON()](file:///D:/dev/letcoode/src/models/earth_table.go#L57) (1 connections)
-- [HoroscopePage](file:///D:/dev/letcoode/src/models/earth_table.go#L10) (1 connections)
-- [Place](file:///D:/dev/letcoode/src/models/earth_table.go#L26) (1 connections)
-- [Star](file:///D:/dev/letcoode/src/models/earth_table.go#L43) (1 connections)
-- [YearStar](file:///D:/dev/letcoode/src/models/earth_table.go#L89) (1 connections)
+- [input.go](file:///D:/dev/letcoode/src/models/input.go#L1) (1 connections)
+- [InputData](file:///D:/dev/letcoode/src/models/input.go#L3) (1 connections)
 
 ## Relationships
 
@@ -18,11 +13,11 @@
 
 ## Source Files
 
-- [D:\dev\letcoode\src\models\earth_table.go](file:///D:/dev/letcoode/src/models/earth_table.go)
+- [D:\dev\letcoode\src\models\input.go](file:///D:/dev/letcoode/src/models/input.go)
 
 ## Audit Trail
 
-- EXTRACTED: 12 (100%)
+- EXTRACTED: 2 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -106,13 +106,17 @@
     }
 
     function hideLoading(evt) {
-        const resp = evt.detail.xhr?.response || '';
+        const empty = document.getElementById('chart-empty');
+        const output = document.getElementById('chart-output');
         if (evt.detail.failed) {
-            const empty = document.getElementById('chart-empty');
-            const output = document.getElementById('chart-output');
+            const resp = evt.detail.xhr?.response || '';
             empty.style.display = 'block';
             empty.innerHTML = '<p class="text-xl mb-2">😞</p><p class="text-sm text-red-500">Lỗi: ' + (resp || 'Không rõ') + '</p>';
             output.innerHTML = '';
+        } else {
+            // Request succeeded - hide empty state and ensure output is visible
+            empty.style.display = 'none';
+            output.classList.remove('hidden');
         }
     }
 

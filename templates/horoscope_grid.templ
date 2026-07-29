@@ -9,10 +9,21 @@ type HoroscopeData struct {
 }
 
 func getPlace(places []models.Place, idx int) string {
-	if idx < len(places) {
+	if idx >= 0 && idx < len(places) {
 		return places[idx].PlaceName
 	}
 	return ""
+}
+
+func normalizePlacesForGrid(places []models.Place) []models.Place {
+	// Some payloads include a placeholder at index 0 (13 entries total).
+	if len(places) == 13 {
+		return places[1:13]
+	}
+	if len(places) > 12 {
+		return places[len(places)-12:]
+	}
+	return places
 }
 
 templ HoroscopeGrid(data HoroscopeData) {
@@ -31,26 +42,28 @@ templ HoroscopeGrid(data HoroscopeData) {
 }
 
 templ gridContent(places []models.Place, center CenterInfo) {
-	<div class="chart-grid grid grid-cols-4 gap-[1px] bg-slate-300 border border-slate-300 rounded-lg overflow-hidden w-fit min-w-[400px] lg:min-w-0">
-		<!-- Row 1 -->
-		{ Palace(Palace{Name: getPlace(places, 0)}) }
-		{ Palace(Palace{Name: getPlace(places, 1)}) }
-		{ Palace(Palace{Name: getPlace(places, 2)}) }
-		{ Palace(Palace{Name: getPlace(places, 3)}) }
+	adjustedPlaces := normalizePlacesForGrid(places)
+	
+	<div class="chart-grid grid grid-cols-4 gap-[1px] bg-slate-300 border border-slate-300 rounded-lg overflow-hidden w-fit min-w-[760px] lg:min-w-0">
+		<!-- Row 1: P1 P2 P3 P4 -->
+		<div style="grid-row:1;grid-column:1;">{ Palace(Palace{Name: getPlace(adjustedPlaces, 0)}) }</div>
+		<div style="grid-row:1;grid-column:2;">{ Palace(Palace{Name: getPlace(adjustedPlaces, 1)}) }</div>
+		<div style="grid-row:1;grid-column:3;">{ Palace(Palace{Name: getPlace(adjustedPlaces, 2)}) }</div>
+		<div style="grid-row:1;grid-column:4;">{ Palace(Palace{Name: getPlace(adjustedPlaces, 3)}) }</div>
 
-		<!-- Row 2 -->
-		{ Palace(Palace{Name: getPlace(places, 4)}) }
-		{ Center(center) }
-		{ Palace(Palace{Name: getPlace(places, 5)}) }
+		<!-- Row 2: P12 CENTER P5 -->
+		<div style="grid-row:2;grid-column:1;">{ Palace(Palace{Name: getPlace(adjustedPlaces, 11)}) }</div>
+		<div style="grid-row:2/span 2;grid-column:2/span 2;">{ Center(center) }</div>
+		<div style="grid-row:2;grid-column:4;">{ Palace(Palace{Name: getPlace(adjustedPlaces, 4)}) }</div>
 
-		<!-- Row 3 -->
-		{ Palace(Palace{Name: getPlace(places, 6)}) }
-		{ Palace(Palace{Name: getPlace(places, 7)}) }
+		<!-- Row 3: P11 CENTER P6 -->
+		<div style="grid-row:3;grid-column:1;">{ Palace(Palace{Name: getPlace(adjustedPlaces, 10)}) }</div>
+		<div style="grid-row:3;grid-column:4;">{ Palace(Palace{Name: getPlace(adjustedPlaces, 5)}) }</div>
 
-		<!-- Row 4 -->
-		{ Palace(Palace{Name: getPlace(places, 8)}) }
-		{ Palace(Palace{Name: getPlace(places, 9)}) }
-		{ Palace(Palace{Name: getPlace(places, 10)}) }
-		{ Palace(Palace{Name: getPlace(places, 11)}) }
+		<!-- Row 4: P10 P9 P8 P7 -->
+		<div style="grid-row:4;grid-column:1;">{ Palace(Palace{Name: getPlace(adjustedPlaces, 9)}) }</div>
+		<div style="grid-row:4;grid-column:2;">{ Palace(Palace{Name: getPlace(adjustedPlaces, 8)}) }</div>
+		<div style="grid-row:4;grid-column:3;">{ Palace(Palace{Name: getPlace(adjustedPlaces, 7)}) }</div>
+		<div style="grid-row:4;grid-column:4;">{ Palace(Palace{Name: getPlace(adjustedPlaces, 6)}) }</div>
 	</div>
 }

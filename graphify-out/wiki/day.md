@@ -1,6 +1,6 @@
-# data
+# day
 
-> God node · 1 connections · [D:\dev\letcoode\src\static\client.js](file:///D:/dev/letcoode/src/static/client.js#L13)
+> God node · 1 connections · [D:\dev\letcoode\src\static\client.js](file:///D:/dev/letcoode/src/static/client.js#L19)
 
 ## Connections by Relation
 
