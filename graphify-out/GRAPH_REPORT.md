@@ -1,7 +1,7 @@
 # Graph Report - D:\dev\letcoode\src  (2026-07-30)
 
 ## Corpus Check
-- 15 files · ~14,227 words
+- 15 files · ~14,224 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
