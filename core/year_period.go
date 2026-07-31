@@ -293,7 +293,7 @@ func TraLuuTuHoa(namXem int) (TraLuuTuHoaResult, error) {
 	}, nil
 }
 
-func GetPalaceStem(yearStemID, branchID int) (HeavenlyStem, error) {
+func GetPalaceJia(yearStemID, branchID int) (HeavenlyStem, error) {
 	stemAtDan, ok := DanStemMap[yearStemID]
 	if !ok {
 		return HeavenlyStem{}, fmt.Errorf("invalid year stem id: %d", yearStemID)
@@ -304,14 +304,14 @@ func GetPalaceStem(yearStemID, branchID int) (HeavenlyStem, error) {
 		return HeavenlyStem{}, fmt.Errorf("invalid branch id: %d", branchID)
 	}
 
-	stemID := mod10(stemAtDan-1+offset) + 1
-	return HeavenlyStems[stemID-1], nil
+	stemID := mod10(stemAtDan - 1 + offset)
+	return HeavenlyStems[stemID], nil
 }
 
-func GetThienCanCung(canYearID int) ([]map[string]any, error) {
+func GetJias(canYearID int) ([]map[string]any, error) {
 	result := make([]map[string]any, 0, 12)
 	for i := 1; i <= 12; i++ {
-		can, err := GetPalaceStem(canYearID, i)
+		can, err := GetPalaceJia(canYearID, i)
 		if err != nil {
 			return nil, err
 		}
@@ -347,7 +347,8 @@ func AnLuuThienMa(branchID int) (int, error) {
 	}
 }
 
-func GenerateYearStars(namXem int) (map[int]models.YearStar, error) {
+func GenerateYearStars(namXem int) (map[int][]models.Star, error) {
+	result := make(map[int][]models.Star)
 	_, chiID := CanChiNamDuongLich(namXem)
 
 	locTonID, ok := MapThienCanGiap[mod10(namXem)]
@@ -377,17 +378,17 @@ func GenerateYearStars(namXem int) (map[int]models.YearStar, error) {
 		return nil, err
 	}
 
-	return map[int]models.YearStar{
-		locTonID:    {Name: "Lưu lộc tồn", PlaceId: locTonID},
-		kinhDuongID: {Name: "Lưu kình dương", PlaceId: kinhDuongID},
-		daLaID:      {Name: "Lưu đà la", PlaceId: daLaID},
-		thaiTueID:   {Name: "Lưu thái tuế", PlaceId: thaiTueID},
-		tangMonID:   {Name: "Lưu tang môn", PlaceId: tangMonID},
-		bachHoID:    {Name: "Lưu bạch hổ", PlaceId: bachHoID},
-		thienHuID:   {Name: "Lưu thiên hư", PlaceId: thienHuID},
-		thienKhocID: {Name: "Lưu thiên khốc", PlaceId: thienKhocID},
-		thienMaID:   {Name: "Lưu thiên mã", PlaceId: thienMaID},
-	}, nil
+	result[locTonID] = append(result[locTonID], models.NewLocTonStar())
+	result[kinhDuongID] = append(result[kinhDuongID], models.NewKinhDuongStar())
+	result[daLaID] = append(result[daLaID], models.NewDaLaStar())
+	result[thaiTueID] = append(result[thaiTueID], models.NewThaiTueStar())
+	result[tangMonID] = append(result[tangMonID], models.NewTangMonStar())
+	result[bachHoID] = append(result[bachHoID], models.NewBachHoStar())
+	result[thienHuID] = append(result[thienHuID], models.NewThienHuStar())
+	result[thienKhocID] = append(result[thienKhocID], models.NewThienKhocStar())
+	result[thienMaID] = append(result[thienMaID], models.NewThienMaStar())
+
+	return result, nil
 }
 
 func resolveChiNamSinh(namSinh *int, chiNamSinh any) (int, error) {

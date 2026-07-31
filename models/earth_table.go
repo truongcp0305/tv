@@ -38,6 +38,7 @@ type Place struct {
 	YearPeriodName string `json:"cungTieuHan"`
 	IsIntercept    bool   `json:"trietLo"`
 	IsBlockade     bool   `json:"tuanTrung"`
+	Jia            string `json:"cungCan,omitempty"`
 }
 
 type Star struct {
@@ -86,7 +87,7 @@ func (f *FlexibleInt) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-type YearStar struct {
+type YearPeriodStar struct {
 	Name    string `json:"name"`
 	PlaceId int    `json:"PlaceId"`
 }
